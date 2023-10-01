@@ -9,14 +9,12 @@ import (
 
 func main() {
 
-	// ------------------ MODIF ANTOINE -----------------------
 	var controls Controls
 	controls.Init()
-	// ---------------------------------------------------------
 
 	// Définition de la largeur et de la hauteur de la fenêtre du jeu
-	screenWidth := int32(800)
-	screenHeight := int32(450)
+	screenWidth := int32(1000)
+	screenHeight := int32(600)
 
 	// Initialisation de la fenêtre avec les dimensions et le titre
 	rl.InitWindow(screenWidth, screenHeight, "Mario Terroriste")
@@ -30,12 +28,17 @@ func main() {
 	bullets := []Bullet{}
 
 	// Création d'objets de sol et de table
-	ground := Ground{0, 420, screenWidth, 30, rl.Brown}
+	ground := Ground{0, 420, screenWidth, 30, rl.DarkGreen}
 	table := Ground{screenWidth / 2, screenHeight / 2, screenWidth / 4, 30, rl.Brown}
+	//table := Ground{screenWidth / position sur x, screenHeight / position sur y, screenWidth / longueur, largeur, rl.couleur}
+	tablebasse := Ground{3 / 6, screenHeight / 6, screenWidth / 6, 30, rl.Brown}
+	naingui := Ground{screenWidth / 4, screenHeight / 4, screenWidth / 6, 30, rl.Brown}
 
 	// Ajout des objets au tableau des éléments du jeu
 	grounds = append(grounds, ground)
 	grounds = append(grounds, table)
+	grounds = append(grounds, tablebasse)
+	grounds = append(grounds, naingui)
 
 	// Chargement des images des personnages et des ennemis
 	Character := rl.LoadImage("assets/mario.png")
@@ -138,7 +141,8 @@ func main() {
 					if rl.CheckCollisionRecs(rl.NewRectangle(float32(current_bullet.posX), float32(current_bullet.posY), float32(current_bullet.radius), float32(current_bullet.radius)), rl.NewRectangle(float32(current_enemy.posX), float32(current_enemy.posY), float32(50), float32(50))) {
 						// Si une balle touche l'ennemi, le désactive et crée de nouveaux ennemis
 						Enemies[index].Draw = false
-						new_enemy1 := Enemy{0, 370, current_enemy.velocity + 1, current_enemy.Damage * 2, true, true, rl.White}
+						new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+						//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 1, current_enemy.Damage * 2, true, true, rl.White}
 						new_enemy2 := Enemy{800, 370, current_enemy.velocity + 1, current_enemy.Damage * 2, true, true, rl.White}
 						Enemies = append(Enemies, new_enemy1)
 						Enemies = append(Enemies, new_enemy2)
@@ -203,13 +207,13 @@ func main() {
 		if rl.IsKeyDown(controls.KeyShoot) {
 			if isRight {
 				if should_shoot {
-					current_bullet := Bullet{int32(x_coords + 50), int32(y_coords + 25), float32(10), true, true, rl.Red}
+					current_bullet := Bullet{int32(x_coords + 50), int32(y_coords + 25), float32(10), true, true, rl.Gray}
 					bullets = append(bullets, current_bullet)
 					should_shoot = false
 				}
 			} else {
 				if should_shoot {
-					current_bullet := Bullet{int32(x_coords - 1), int32(y_coords + 25), float32(10), false, true, rl.Red}
+					current_bullet := Bullet{int32(x_coords - 1), int32(y_coords + 25), float32(10), false, true, rl.Gray}
 					bullets = append(bullets, current_bullet)
 					should_shoot = false
 				}
