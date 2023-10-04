@@ -3,11 +3,10 @@ package main
 import (
 	"fmt"
 	"strconv"
-
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-func main() {
+	func main() {
 
 	var controls Controls
 	controls.Init()
@@ -28,17 +27,17 @@ func main() {
 	bullets := []Bullet{}
 
 	// Création d'objets de sol et de table
-	ground := Ground{0, 420, screenWidth, 30, rl.DarkGreen}
-	table := Ground{screenWidth / 2, screenHeight / 2, screenWidth / 4, 30, rl.Brown}
+	greenPlateform := Ground{0, 420, screenWidth, 30, rl.DarkGreen}
+	secondPlateform := Ground{screenWidth / 2, screenHeight / 2, screenWidth / 4, 30, rl.Brown}
 	//table := Ground{screenWidth / position sur x, screenHeight / position sur y, screenWidth / longueur, largeur, rl.couleur}
-	tablebasse := Ground{3 / 6, screenHeight / 6, screenWidth / 6, 30, rl.Brown}
-	naingui := Ground{screenWidth / 4, screenHeight / 4, screenWidth / 6, 30, rl.Brown}
+	thirdPlateform := Ground{3 / 6, screenHeight / 6, screenWidth / 6, 30, rl.Brown}
+	fourthPlateform := Ground{screenWidth / 4, screenHeight / 4, screenWidth / 6, 30, rl.Brown}
 
 	// Ajout des objets au tableau des éléments du jeu
-	grounds = append(grounds, ground)
-	grounds = append(grounds, table)
-	grounds = append(grounds, tablebasse)
-	grounds = append(grounds, naingui)
+	grounds = append(grounds, greenPlateform)
+	grounds = append(grounds, secondPlateform)
+	grounds = append(grounds, thirdPlateform)
+	grounds = append(grounds, fourthPlateform)
 
 	// Chargement des images des personnages et des ennemis
 	Character := rl.LoadImage("assets/mario.png")
@@ -102,23 +101,25 @@ func main() {
 			rl.DrawRectangle(current_ground.posX, current_ground.posY, current_ground.width, current_ground.height, current_ground.Color)
 			if rl.CheckCollisionRecs(rl.NewRectangle(float32(x_coords), float32(y_coords), float32(50), float32(50)), rl.NewRectangle(float32(current_ground.posX), float32(current_ground.posY), float32(current_ground.width), float32(current_ground.height))) {
 				y_coords = current_ground.posY - 50
-				if rl.IsKeyDown(controls.KeyJump) {
-					y_coords -= 300
+				if rl.IsKeyDown(controls.KeyJump) { // si espace
+					y_coords -= 150
 				}
 			}
 		}
+
+		
 
 		// Gestion des ennemis
 		for index, current_enemy := range Enemies {
 			if Enemies[index].Draw {
 				// Gestion du mouvement de l'ennemi
-				if current_enemy.posX > screenWidth {
-					Enemies[index].velocity = -5
+				if current_enemy.posX > screenWidth { // si hors map
+					Enemies[index].velocity = -5 // la vitesse du goomba en question devient -5
 				}
 				if current_enemy.posX < 0 {
 					Enemies[index].velocity = 5
 				}
-				if current_enemy.Direction {
+				if current_enemy.Direction { // si change de direction 
 					Enemy_texture = rl.LoadTextureFromImage(RightGoomba)
 					Enemies[index].posX = int32(Enemies[index].posX + Enemies[index].velocity)
 					Enemies[index].Direction = false
@@ -141,15 +142,29 @@ func main() {
 					if rl.CheckCollisionRecs(rl.NewRectangle(float32(current_bullet.posX), float32(current_bullet.posY), float32(current_bullet.radius), float32(current_bullet.radius)), rl.NewRectangle(float32(current_enemy.posX), float32(current_enemy.posY), float32(50), float32(50))) {
 						// Si une balle touche l'ennemi, le désactive et crée de nouveaux ennemis
 						Enemies[index].Draw = false
+						if Score >= 5 {
 						new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 1, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy2 := Enemy{800, 370, current_enemy.velocity + 1, current_enemy.Damage * 2, true, true, rl.White}
 						Enemies = append(Enemies, new_enemy1)
+							Score++
+							bullets[index1] = Bullet{}
+							should_shoot = true
+
+
+						} else { 
+						//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+						new_enemy2 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
+						new_enemy3 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
+
+						//Enemies = append(Enemies, new_enemy1)
 						Enemies = append(Enemies, new_enemy2)
+						Enemies = append(Enemies, new_enemy3)
+
 						Score++
 						bullets[index1] = Bullet{}
 						should_shoot = true
+						}
 					}
+					
 					if current_bullet.posX < 0 || current_bullet.posX > screenWidth {
 						// Si une balle sort de l'écran, la désactive
 						if current_bullet.Draw {
@@ -176,11 +191,13 @@ func main() {
 					}
 				}
 			}
+
+			
 		}
 
 		// Si le personnage est au-dessus du sol, ajuste sa position vers le bas
-		if y_coords+45 < ground.posY {
-			if y_coords > ground.posY {
+		if y_coords+45 < greenPlateform.posY {
+			if y_coords > greenPlateform.posY {
 			} else {
 				y_coords += 5
 			}
@@ -245,3 +262,4 @@ func main() {
 	// Ferme la fenêtre de jeu
 	rl.CloseWindow()
 }
+
