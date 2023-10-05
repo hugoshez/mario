@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"strconv"
+
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-	func main() {
+func main() {
 
 	var controls Controls
 	controls.Init()
@@ -89,6 +90,9 @@ import (
 		} else {
 			rl.DrawText("Health: "+strconv.Itoa(Health), 0, 0, 20, rl.Red)
 		}
+		if Health < 0 {
+			Health = 0
+		}
 
 		// Affiche le score du joueur
 		rl.DrawText("Score: "+strconv.Itoa(Score), 2, 300, 20, rl.Blue)
@@ -107,8 +111,6 @@ import (
 			}
 		}
 
-		
-
 		// Gestion des ennemis
 		for index, current_enemy := range Enemies {
 			if Enemies[index].Draw {
@@ -119,7 +121,7 @@ import (
 				if current_enemy.posX < 0 {
 					Enemies[index].velocity = 5
 				}
-				if current_enemy.Direction { // si change de direction 
+				if current_enemy.Direction { // si change de direction
 					Enemy_texture = rl.LoadTextureFromImage(RightGoomba)
 					Enemies[index].posX = int32(Enemies[index].posX + Enemies[index].velocity)
 					Enemies[index].Direction = false
@@ -142,29 +144,41 @@ import (
 					if rl.CheckCollisionRecs(rl.NewRectangle(float32(current_bullet.posX), float32(current_bullet.posY), float32(current_bullet.radius), float32(current_bullet.radius)), rl.NewRectangle(float32(current_enemy.posX), float32(current_enemy.posY), float32(50), float32(50))) {
 						// Si une balle touche l'ennemi, le désactive et crée de nouveaux ennemis
 						Enemies[index].Draw = false
-						if Score >= 5 {
-						new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						Enemies = append(Enemies, new_enemy1)
+						if Score <= 5 {
+							new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+							Enemies = append(Enemies, new_enemy1)
 							Score++
 							bullets[index1] = Bullet{}
 							should_shoot = true
 
+						} else if Score > 5 && Score <= 25 {
+							//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+							new_enemy2 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
+							new_enemy3 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
 
-						} else { 
-						//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy2 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy3 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
+							//Enemies = append(Enemies, new_enemy1)
+							Enemies = append(Enemies, new_enemy2)
+							Enemies = append(Enemies, new_enemy3)
 
-						//Enemies = append(Enemies, new_enemy1)
-						Enemies = append(Enemies, new_enemy2)
-						Enemies = append(Enemies, new_enemy3)
+							Score++
+							bullets[index1] = Bullet{}
+							should_shoot = true
+						} else {
+							new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+							new_enemy2 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+							new_enemy3 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
 
-						Score++
-						bullets[index1] = Bullet{}
-						should_shoot = true
+							Enemies = append(Enemies, new_enemy1)
+							Enemies = append(Enemies, new_enemy2)
+							Enemies = append(Enemies, new_enemy3)
+
+							Score++
+							bullets[index1] = Bullet{}
+							should_shoot = true
+
 						}
 					}
-					
+
 					if current_bullet.posX < 0 || current_bullet.posX > screenWidth {
 						// Si une balle sort de l'écran, la désactive
 						if current_bullet.Draw {
@@ -192,7 +206,6 @@ import (
 				}
 			}
 
-			
 		}
 
 		// Si le personnage est au-dessus du sol, ajuste sa position vers le bas
@@ -262,4 +275,3 @@ import (
 	// Ferme la fenêtre de jeu
 	rl.CloseWindow()
 }
-
