@@ -1,0 +1,38 @@
+for index, current_cat := range SmurfCats  {
+							   {
+								if SmurfCats[index].Draw {
+									// Gestion du mouvement de l'ennemi
+									if current_cat.posX > screenWidth { // si hors map
+										SmurfCats[index].velocity = -5 // la vitesse du goomba en question devient -5
+									}
+									if current_cat.posX < 0 {
+										SmurfCats[index].velocity = 5
+									}
+									if current_cat.Direction { // si change de direction
+										Cat_texture = rl.LoadTextureFromImage(Smurfcatleft)
+										SmurfCats[index].posX = int32(Enemies[index].posX + Enemies[index].velocity)
+										SmurfCats[index].Direction = false
+									} else {
+										Cat_texture = rl.LoadTextureFromImage(DifferentEnemy)
+										SmurfCats[index].Direction = true
+									}
+
+									if rl.CheckCollisionRecs(rl.NewRectangle(float32(x_coords), float32(y_coords), float32(50), float32(50)), rl.NewRectangle(float32(current_enemy.posX), float32(current_enemy.posY), float32(50), float32(50))) {
+										Health = Health - int(current_enemy.Damage)
+										fmt.Println("detect")
+									}
+
+									rl.DrawTexture(Cat_texture, current_cat.posX, current_cat.posY, current_cat.Color)
+
+									for index1, current_bullet := range bullets {
+										if rl.CheckCollisionRecs(rl.NewRectangle(float32(current_bullet.posX), float32(current_bullet.posY), float32(current_bullet.radius), float32(current_bullet.radius)), rl.NewRectangle(float32(current_enemy.posX), float32(current_enemy.posY), float32(50), float32(50))) {
+											// Si une balle touche l'ennemi, le désactive et crée de nouveaux ennemis
+											Enemies[index].Draw = false
+									
+							catenemy1 := SmurfEnemy{0, 370, current_cat.velocity + 2, current_cat.Damage * 2, true, true, rl.White}
+							catenemy2 := SmurfEnemy{0, 370, current_cat.velocity + 2, current_cat.Damage * 2, true, true, rl.White}
+							catenemy3 := SmurfEnemy{800, 370, current_cat.velocity - 2, current_cat.Damage * 2, true, true, rl.White}
+
+							SmurfCats = append(SmurfCats, catenemy1)
+							SmurfCats = append(SmurfCats, catenemy2)
+							SmurfCats = append(SmurfCats, catenemy3)

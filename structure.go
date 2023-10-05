@@ -36,6 +36,17 @@ type Enemy struct {
 	Draw      bool     // Indique si l'ennemi doit être dessiné
 	Color     rl.Color // Couleur de l'ennemi (utilise la bibliothèque raylib)
 }
+
+type SmurfEnemy struct {
+	posX      int32    // Position en X de l'ennemi
+	posY      int32    // Position en Y de l'ennemi
+	velocity  int32    // Vitesse de déplacement de l'ennemi
+	Damage    float32  // Dommages infligés par l'ennemi
+	Direction bool     // Direction de déplacement de l'ennemi (gauche ou droite)
+	Draw      bool     // Indique si l'ennemi doit être dessiné
+	Color     rl.Color // Couleur de l'ennemi (utilise la bibliothèque raylib)
+}
+
 type DifferentEnemy struct {
 	posX      int32
 	posY      int32

@@ -21,7 +21,7 @@ func ShowMenu(controls *Controls) bool {
 
 	// Vérifie si la touche "C" est enfoncée pour configurer les touches
 	if rl.IsKeyPressed(rl.KeyC) {
-		ConfigureControls(controls) // Appelle la fonction de configuration des touches
+			ConfigureControls(controls) // Appelle la fonction de configuration des touches
 	}
 
 	// Vérifie si la touche "ECHAP" est enfoncée pour quitter le menu

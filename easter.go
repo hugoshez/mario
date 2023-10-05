@@ -3,14 +3,22 @@ package main
 import (
 	"fmt"
 	"strconv"
-
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
-func main() {
+func spawnCats() {
 
-	var controls Controls
+var controls Controls
 	controls.Init()
+
+	  // Chargez la musique
+	  music := rl.LoadMusicStream("/home/wheatis/Documents/mario-terroriste/smurfcat.mp3")
+    
+	  // Définissez le volume de la musique
+	  rl.SetMusicVolume(music, 1.0)
+	  
+	  // Jouez la musique
+	  rl.PlayMusicStream(music)
 
 	// Définition de la largeur et de la hauteur de la fenêtre du jeu
 	screenWidth := int32(1000)
@@ -43,24 +51,18 @@ func main() {
 	// Chargement des images des personnages et des ennemis
 	Character := rl.LoadImage("assets/mario.png")
 	LeftCharacter := rl.LoadImage("assets/leftmario.png")
-	Enemies := []Enemy{}
 	SmurfCats := []SmurfEnemy{}
-	RightGoomba := rl.LoadImage("assets/leftgoomba.png")
-	LeftGoomba := rl.LoadImage("assets/rightgoomba.png")
-	//DifferentEnemy := rl.LoadImage("assets/smurfcat.png")
-	//Smurfcatleft := rl.LoadImage("assets/smurfcatleft.png")
+	Smurfcat := rl.LoadImage("assets/smurfcat.png")
+	Smurfcatleft := rl.LoadImage("assets/smurfcatleft.png")
 
 	// Création d'un ennemi initial et ajout au tableau des ennemis
-	first_enemy := Enemy{0, 370, 5, 1, true, true, rl.White}
-	Enemies = append(Enemies, first_enemy)
 	smurf_enemy := SmurfEnemy{0, 370, 5, 1, true, true, rl.White}
 	SmurfCats = append(SmurfCats, smurf_enemy)
 
 	
 	// Chargement de la texture du personnage
-	Enemy_texture := rl.LoadTextureFromImage(RightGoomba)
 	texture := rl.LoadTextureFromImage(Character)
-	//Cat_texture := rl.LoadTextureFromImage(DifferentEnemy)
+	Cat_texture := rl.LoadTextureFromImage(Smurfcat)
 
 
 	// Coordonnées initiales du personnage
@@ -79,9 +81,12 @@ func main() {
 	// Variable pour afficher ou masquer le menu
 	showMenu := false
 
-	// Boucle principale du jeu
-	// Boucle principale du jeu
 	for !rl.WindowShouldClose() {
+		rl.DrawText("Enjoy this infinte funny secret round", 160, 50, 38, rl.Orange)
+
+		  // Mettez à jour la musique
+		  rl.UpdateMusicStream(music)
+
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
 		
@@ -90,9 +95,7 @@ func main() {
 			main()
 		}
 
-
-
-		// Si showMenu est vrai, affiche le menu de configuration et attend une réponse
+ 		// Si showMenu est vrai, affiche le menu de configuration et attend une réponse
 		if showMenu {
 			showMenu = ShowMenu(&controls)
 		}
@@ -127,22 +130,22 @@ func main() {
 		
 
 		// Gestion des ennemis
-		for index, current_enemy := range Enemies {
-			if Enemies[index].Draw {
+		for index, current_enemy := range SmurfCats {
+			if SmurfCats[index].Draw {
 				// Gestion du mouvement de l'ennemi
 				if current_enemy.posX > screenWidth { // si hors map
-					Enemies[index].velocity = -5 // la vitesse du goomba en question devient -5
+					SmurfCats[index].velocity = -5 // la vitesse du goomba en question devient -5
 				}
 				if current_enemy.posX < 0 {
-					Enemies[index].velocity = 5
+					SmurfCats[index].velocity = 5
 				}
 				if current_enemy.Direction { // si change de direction 
-					Enemy_texture = rl.LoadTextureFromImage(RightGoomba)
-					Enemies[index].posX = int32(Enemies[index].posX + Enemies[index].velocity)
-					Enemies[index].Direction = false
+					Cat_texture = rl.LoadTextureFromImage(Smurfcat)
+					SmurfCats[index].posX = int32(SmurfCats[index].posX + SmurfCats[index].velocity)
+					SmurfCats[index].Direction = false
 				} else {
-					Enemy_texture = rl.LoadTextureFromImage(LeftGoomba)
-					Enemies[index].Direction = true
+					Cat_texture = rl.LoadTextureFromImage(Smurfcatleft)
+					SmurfCats[index].Direction = true
 				}
 
 				// Vérifie les collisions avec l'ennemi et ajuste la santé du joueur
@@ -152,51 +155,28 @@ func main() {
 				}
 
 				// Affiche l'ennemi avec sa texture
-				rl.DrawTexture(Enemy_texture, current_enemy.posX, current_enemy.posY, current_enemy.Color)
+				rl.DrawTexture(Cat_texture, current_enemy.posX, current_enemy.posY, current_enemy.Color)
 
 				// Gestion des balles
 				for index1, current_bullet := range bullets {
 					if rl.CheckCollisionRecs(rl.NewRectangle(float32(current_bullet.posX), float32(current_bullet.posY), float32(current_bullet.radius), float32(current_bullet.radius)), rl.NewRectangle(float32(current_enemy.posX), float32(current_enemy.posY), float32(50), float32(50))) {
 						// Si une balle touche l'ennemi, le désactive et crée de nouveaux ennemis
-						Enemies[index].Draw = false
-						if Score <= 5 {
-						new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						Enemies = append(Enemies, new_enemy1)
-							Score++
-							bullets[index1] = Bullet{}
-							should_shoot = true
-
-						} else if Score <= 30 { 
-						//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy2 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy3 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
+						SmurfCats[index].Draw = false
+					
+						new_enemy1 := SmurfEnemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+						new_enemy2 := SmurfEnemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
 
 						//Enemies = append(Enemies, new_enemy1)
-						Enemies = append(Enemies, new_enemy2)
-						Enemies = append(Enemies, new_enemy3)
+						SmurfCats = append(SmurfCats, new_enemy2)
+						SmurfCats = append(SmurfCats, new_enemy1)
 
 						Score++
 						bullets[index1] = Bullet{}
 
 						should_shoot = true
-						} else if Score > 30 {
-
-							rl.CloseWindow()
-							spawnCats()
-
-
-						/*new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy2 := Enemy{800, 370, current_enemy.velocity - 1, current_enemy.Damage * 2, true, true, rl.White}
-
-						Enemies = append(Enemies, new_enemy1)
-						Enemies = append(Enemies, new_enemy2)
-
-						Score++
-						bullets[index1] = Bullet{}
-
-						should_shoot = true*/
+					
 						}
-					}
+					
 					
 					if current_bullet.posX < 0 || current_bullet.posX > screenWidth {
 						// Si une balle sort de l'écran, la désactive
@@ -224,9 +204,10 @@ func main() {
 					}
 				}
 			}
+		}
 
 			
-		}
+		
 
 		// Si le personnage est au-dessus du sol, ajuste sa position vers le bas
 		if y_coords+45 < greenPlateform.posY {
@@ -281,22 +262,19 @@ func main() {
 			x_coords -= 15
 		}
 		if Health <= 0 {
-			Enemies = nil
+			SmurfCats = nil
 			grounds = nil
 			bullets = nil
 			rl.UnloadTexture(texture)
 			rl.DrawText("Your final score is: "+strconv.Itoa(Score), 30, 40, 30, rl.Red)
 		}
 
-	
-
 		// Met fin au rendu de la frame
 		rl.EndDrawing()
 	}
 
 	// Ferme la fenêtre de jeu
-	//rl.StopMusicStream(music)
-	//rl.UnloadMusicStream(music)
-	//rl.CloseAudioDevice()
+		rl.UnloadMusicStream(music)
 	rl.CloseWindow()
 }
+
