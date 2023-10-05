@@ -36,6 +36,16 @@ type Enemy struct {
 	Draw      bool     // Indique si l'ennemi doit être dessiné
 	Color     rl.Color // Couleur de l'ennemi (utilise la bibliothèque raylib)
 }
+type DifferentEnemy struct {
+	posX      int32
+	posY      int32
+	velocity  int32
+	Damage    float32
+	Direction bool
+	Draw      bool
+	Color     rl.Color
+	Texture   rl.Texture2D // Nouvelle variable pour la texture de l'apparence différente
+}
 
 // Définition de la structure Controls, qui stocke les touches configurées pour le jeu.
 type Controls struct {

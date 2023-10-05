@@ -46,10 +46,15 @@ func main() {
 	Enemies := []Enemy{}
 	RightGoomba := rl.LoadImage("assets/leftgoomba.png")
 	LeftGoomba := rl.LoadImage("assets/rightgoomba.png")
+	//DifferentEnemy := rl.Texture2D("assets/smurfcat.png")
+	//Smurfcatleft := rl.LoadImage("assets/smurfcatleft.png")
 
 	// Création d'un ennemi initial et ajout au tableau des ennemis
 	first_enemy := Enemy{0, 370, 5, 1, true, true, rl.White}
 	Enemies = append(Enemies, first_enemy)
+	// Créez un ennemi avec une apparence différente
+	//different_enemy := DifferentEnemy{0, 370, 5, 0, true, true, rl.White}
+	//Enemies = append(Enemies, different_enemy) // Ajoutez l'ennemi avec l'apparence différente
 
 	// Chargement de la texture du personnage
 	Enemy_texture := rl.LoadTextureFromImage(RightGoomba)
