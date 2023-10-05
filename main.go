@@ -56,12 +56,10 @@ func main() {
 	smurf_enemy := SmurfEnemy{0, 370, 5, 1, true, true, rl.White}
 	SmurfCats = append(SmurfCats, smurf_enemy)
 
-	
 	// Chargement de la texture du personnage
 	Enemy_texture := rl.LoadTextureFromImage(RightGoomba)
 	texture := rl.LoadTextureFromImage(Character)
 	//Cat_texture := rl.LoadTextureFromImage(DifferentEnemy)
-
 
 	// Coordonnées initiales du personnage
 	var x_coords int32 = screenWidth/2 - texture.Width/2
@@ -84,13 +82,14 @@ func main() {
 	for !rl.WindowShouldClose() {
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
-		
-        if rl.IsKeyDown(rl.KeyEnter){ // si entrer on peut recommencer
+
+		if rl.IsKeyDown(rl.KeyEnter) { // si entrer on peut recommencer
 			rl.CloseWindow()
 			main()
 		}
 
-
+		// Affiche le titre de la configuration des touches en noir
+		rl.DrawText("Press G to reveal menu", 800, 30, 15, rl.Black)
 
 		// Si showMenu est vrai, affiche le menu de configuration et attend une réponse
 		if showMenu {
@@ -124,8 +123,6 @@ func main() {
 			}
 		}
 
-		
-
 		// Gestion des ennemis
 		for index, current_enemy := range Enemies {
 			if Enemies[index].Draw {
@@ -136,7 +133,7 @@ func main() {
 				if current_enemy.posX < 0 {
 					Enemies[index].velocity = 5
 				}
-				if current_enemy.Direction { // si change de direction 
+				if current_enemy.Direction { // si change de direction
 					Enemy_texture = rl.LoadTextureFromImage(RightGoomba)
 					Enemies[index].posX = int32(Enemies[index].posX + Enemies[index].velocity)
 					Enemies[index].Direction = false
@@ -150,6 +147,9 @@ func main() {
 					Health = Health - int(current_enemy.Damage)
 					fmt.Println("detect")
 				}
+				if Health < 0 {
+					Health = 0
+				}
 
 				// Affiche l'ennemi avec sa texture
 				rl.DrawTexture(Enemy_texture, current_enemy.posX, current_enemy.posY, current_enemy.Color)
@@ -160,44 +160,43 @@ func main() {
 						// Si une balle touche l'ennemi, le désactive et crée de nouveaux ennemis
 						Enemies[index].Draw = false
 						if Score <= 5 {
-						new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						Enemies = append(Enemies, new_enemy1)
+							new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+							Enemies = append(Enemies, new_enemy1)
 							Score++
 							bullets[index1] = Bullet{}
 							should_shoot = true
 
-						} else if Score <= 30 { 
-						//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy2 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy3 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
+						} else if Score <= 30 {
+							//new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+							new_enemy2 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
+							new_enemy3 := Enemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
 
-						//Enemies = append(Enemies, new_enemy1)
-						Enemies = append(Enemies, new_enemy2)
-						Enemies = append(Enemies, new_enemy3)
+							//Enemies = append(Enemies, new_enemy1)
+							Enemies = append(Enemies, new_enemy2)
+							Enemies = append(Enemies, new_enemy3)
 
-						Score++
-						bullets[index1] = Bullet{}
+							Score++
+							bullets[index1] = Bullet{}
 
-						should_shoot = true
+							should_shoot = true
 						} else if Score > 30 {
 
 							rl.CloseWindow()
 							spawnCats()
 
+							/*new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
+							new_enemy2 := Enemy{800, 370, current_enemy.velocity - 1, current_enemy.Damage * 2, true, true, rl.White}
 
-						/*new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy2 := Enemy{800, 370, current_enemy.velocity - 1, current_enemy.Damage * 2, true, true, rl.White}
+							Enemies = append(Enemies, new_enemy1)
+							Enemies = append(Enemies, new_enemy2)
 
-						Enemies = append(Enemies, new_enemy1)
-						Enemies = append(Enemies, new_enemy2)
+							Score++
+							bullets[index1] = Bullet{}
 
-						Score++
-						bullets[index1] = Bullet{}
-
-						should_shoot = true*/
+							should_shoot = true*/
 						}
 					}
-					
+
 					if current_bullet.posX < 0 || current_bullet.posX > screenWidth {
 						// Si une balle sort de l'écran, la désactive
 						if current_bullet.Draw {
@@ -225,7 +224,6 @@ func main() {
 				}
 			}
 
-			
 		}
 
 		// Si le personnage est au-dessus du sol, ajuste sa position vers le bas
@@ -287,8 +285,6 @@ func main() {
 			rl.UnloadTexture(texture)
 			rl.DrawText("Your final score is: "+strconv.Itoa(Score), 30, 40, 30, rl.Red)
 		}
-
-	
 
 		// Met fin au rendu de la frame
 		rl.EndDrawing()

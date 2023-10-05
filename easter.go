@@ -3,22 +3,23 @@ package main
 import (
 	"fmt"
 	"strconv"
+
 	"github.com/gen2brain/raylib-go/raylib"
 )
 
 func spawnCats() {
 
-var controls Controls
+	var controls Controls
 	controls.Init()
 
-	  // Chargez la musique
-	  music := rl.LoadMusicStream("/home/wheatis/Documents/mario-terroriste/smurfcat.mp3")
-    
-	  // Définissez le volume de la musique
-	  rl.SetMusicVolume(music, 1.0)
-	  
-	  // Jouez la musique
-	  rl.PlayMusicStream(music)
+	// Chargez la musique
+	music := rl.LoadMusicStream("/home/wheatis/Documents/mario-terroriste/smurfcat.mp3")
+
+	// Définissez le volume de la musique
+	rl.SetMusicVolume(music, 1.0)
+
+	// Jouez la musique
+	rl.PlayMusicStream(music)
 
 	// Définition de la largeur et de la hauteur de la fenêtre du jeu
 	screenWidth := int32(1000)
@@ -36,11 +37,11 @@ var controls Controls
 	bullets := []Bullet{}
 
 	// Création d'objets de sol et de table
-	greenPlateform := Ground{0, 420, screenWidth, 30, rl.DarkGreen}
-	secondPlateform := Ground{screenWidth / 2, screenHeight / 2, screenWidth / 4, 30, rl.Brown}
+	greenPlateform := Ground{0, 420, screenWidth, 30, rl.Green}
+	secondPlateform := Ground{screenWidth / 2, screenHeight / 2, screenWidth / 4, 30, rl.Blue}
 	//table := Ground{screenWidth / position sur x, screenHeight / position sur y, screenWidth / longueur, largeur, rl.couleur}
-	thirdPlateform := Ground{3 / 6, screenHeight / 6, screenWidth / 6, 30, rl.Brown}
-	fourthPlateform := Ground{screenWidth / 4, screenHeight / 4, screenWidth / 6, 30, rl.Brown}
+	thirdPlateform := Ground{3 / 6, screenHeight / 6, screenWidth / 6, 30, rl.Orange}
+	fourthPlateform := Ground{screenWidth / 4, screenHeight / 4, screenWidth / 6, 30, rl.Pink}
 
 	// Ajout des objets au tableau des éléments du jeu
 	grounds = append(grounds, greenPlateform)
@@ -59,11 +60,9 @@ var controls Controls
 	smurf_enemy := SmurfEnemy{0, 370, 5, 1, true, true, rl.White}
 	SmurfCats = append(SmurfCats, smurf_enemy)
 
-	
 	// Chargement de la texture du personnage
 	texture := rl.LoadTextureFromImage(Character)
 	Cat_texture := rl.LoadTextureFromImage(Smurfcat)
-
 
 	// Coordonnées initiales du personnage
 	var x_coords int32 = screenWidth/2 - texture.Width/2
@@ -82,20 +81,20 @@ var controls Controls
 	showMenu := false
 
 	for !rl.WindowShouldClose() {
-		rl.DrawText("Enjoy this infinte funny secret round", 160, 50, 38, rl.Orange)
+		rl.DrawText("Enjoy this infinte funny secret round !!!", 160, 250, 38, rl.Red)
 
-		  // Mettez à jour la musique
-		  rl.UpdateMusicStream(music)
+		// Mettez à jour la musique
+		rl.UpdateMusicStream(music)
 
 		rl.BeginDrawing()
 		rl.ClearBackground(rl.RayWhite)
-		
-        if rl.IsKeyDown(rl.KeyEnter){ // si entrer on peut recommencer
+
+		if rl.IsKeyDown(rl.KeyEnter) { // si entrer on peut recommencer
 			rl.CloseWindow()
 			main()
 		}
 
- 		// Si showMenu est vrai, affiche le menu de configuration et attend une réponse
+		// Si showMenu est vrai, affiche le menu de configuration et attend une réponse
 		if showMenu {
 			showMenu = ShowMenu(&controls)
 		}
@@ -108,6 +107,9 @@ var controls Controls
 			rl.DrawText("Health: "+strconv.Itoa(Health), 0, 0, 20, rl.Orange)
 		} else {
 			rl.DrawText("Health: "+strconv.Itoa(Health), 0, 0, 20, rl.Red)
+		}
+		if Health < 0 {
+			Health = 0
 		}
 
 		// Affiche le score du joueur
@@ -127,8 +129,6 @@ var controls Controls
 			}
 		}
 
-		
-
 		// Gestion des ennemis
 		for index, current_enemy := range SmurfCats {
 			if SmurfCats[index].Draw {
@@ -139,7 +139,7 @@ var controls Controls
 				if current_enemy.posX < 0 {
 					SmurfCats[index].velocity = 5
 				}
-				if current_enemy.Direction { // si change de direction 
+				if current_enemy.Direction { // si change de direction
 					Cat_texture = rl.LoadTextureFromImage(Smurfcat)
 					SmurfCats[index].posX = int32(SmurfCats[index].posX + SmurfCats[index].velocity)
 					SmurfCats[index].Direction = false
@@ -162,7 +162,7 @@ var controls Controls
 					if rl.CheckCollisionRecs(rl.NewRectangle(float32(current_bullet.posX), float32(current_bullet.posY), float32(current_bullet.radius), float32(current_bullet.radius)), rl.NewRectangle(float32(current_enemy.posX), float32(current_enemy.posY), float32(50), float32(50))) {
 						// Si une balle touche l'ennemi, le désactive et crée de nouveaux ennemis
 						SmurfCats[index].Draw = false
-					
+
 						new_enemy1 := SmurfEnemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
 						new_enemy2 := SmurfEnemy{800, 370, current_enemy.velocity - 2, current_enemy.Damage * 2, true, true, rl.White}
 
@@ -174,10 +174,9 @@ var controls Controls
 						bullets[index1] = Bullet{}
 
 						should_shoot = true
-					
-						}
-					
-					
+
+					}
+
 					if current_bullet.posX < 0 || current_bullet.posX > screenWidth {
 						// Si une balle sort de l'écran, la désactive
 						if current_bullet.Draw {
@@ -205,9 +204,6 @@ var controls Controls
 				}
 			}
 		}
-
-			
-		
 
 		// Si le personnage est au-dessus du sol, ajuste sa position vers le bas
 		if y_coords+45 < greenPlateform.posY {
@@ -266,7 +262,7 @@ var controls Controls
 			grounds = nil
 			bullets = nil
 			rl.UnloadTexture(texture)
-			rl.DrawText("Your final score is: "+strconv.Itoa(Score), 30, 40, 30, rl.Red)
+			rl.DrawText("Your final crazy score is: "+strconv.Itoa(Score), 30, 40, 30, rl.Red)
 		}
 
 		// Met fin au rendu de la frame
@@ -274,7 +270,6 @@ var controls Controls
 	}
 
 	// Ferme la fenêtre de jeu
-		rl.UnloadMusicStream(music)
+	rl.UnloadMusicStream(music)
 	rl.CloseWindow()
 }
-
