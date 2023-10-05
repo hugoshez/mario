@@ -184,17 +184,6 @@ func main() {
 							rl.CloseWindow()
 							spawnCats()
 
-
-						/*new_enemy1 := Enemy{0, 370, current_enemy.velocity + 2, current_enemy.Damage * 2, true, true, rl.White}
-						new_enemy2 := Enemy{800, 370, current_enemy.velocity - 1, current_enemy.Damage * 2, true, true, rl.White}
-
-						Enemies = append(Enemies, new_enemy1)
-						Enemies = append(Enemies, new_enemy2)
-
-						Score++
-						bullets[index1] = Bullet{}
-
-						should_shoot = true*/
 						}
 					}
 					
