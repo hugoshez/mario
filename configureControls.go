@@ -14,6 +14,11 @@ func ConfigureControls(controls *Controls) {
 		// Efface l'arrière-plan avec la couleur blanche
 		rl.ClearBackground(rl.RayWhite)
 
+		if rl.IsKeyDown(rl.KeyEnter) { // si entrer on peut recommencer
+			rl.CloseWindow()
+			main()
+		}
+
 		// Affiche le titre de la configuration des touches en noir
 		rl.DrawText("Configuration des touches indisponible", 200, 50, 30, rl.Black)
 
@@ -25,10 +30,7 @@ func ConfigureControls(controls *Controls) {
 		rl.DrawText("Touche pour aller à gauche: Gauche", 200, 240, 20, rl.DarkGray)
 		rl.DrawText("Touche pour aller à droite: Droite", 200, 280, 20, rl.DarkGray)
 		rl.DrawText("Touche pour tirer: F", 200, 320, 20, rl.DarkGray)
-		rl.DrawText("Touche pour revenir au menu: C", 200, 360, 20, rl.DarkGray)
-
-		// Affiche un message pour indiquer comment revenir au menu principal
-		rl.DrawText("Appuyez sur ESCAPE pour revenir au menu principal", 200, 400, 20, rl.DarkGray)
+		rl.DrawText("Touche pour revenir au jeux: Enter", 200, 360, 20, rl.DarkGray)
 
 		// Termine le dessin
 		rl.EndDrawing()
